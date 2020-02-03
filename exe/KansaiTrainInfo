@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'KansaiTrainInfo'
+
+puts KansaiTrainInfo.greet
