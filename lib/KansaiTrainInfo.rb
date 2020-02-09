@@ -1,8 +1,7 @@
-# require "thor"
+require "thor"
 require "KansaiTrainInfo/version"
+require "KansaiTrainInfo/cli"
+require "KansaiTrainInfo/client"
 
 module KansaiTrainInfo
-  def self.greet
-    "hello"
-  end
 end

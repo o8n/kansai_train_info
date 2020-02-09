@@ -2,4 +2,4 @@
 
 require 'KansaiTrainInfo'
 
-puts KansaiTrainInfo.greet
+KansaiTrainInfo::CLI.start(ARGV)
