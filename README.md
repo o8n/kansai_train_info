@@ -16,6 +16,14 @@ Or install it yourself as:
 
 ## Usage
 
+``` sh
+irb
+irb(main):001:0> require 'KansaiTrainInfo'
+=> true
+irb(main):002:0> KansaiTrainInfo.get(['大阪環状線'])
+大阪環状線は平常運転です
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
