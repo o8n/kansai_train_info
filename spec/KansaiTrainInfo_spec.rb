@@ -3,7 +3,7 @@ RSpec.describe KansaiTrainInfo do
     expect(KansaiTrainInfo::VERSION).not_to be nil
   end
 
-  it "does something useful" do
-    expect(KansaiTrainInfo.greet).to eq("hello")
-  end
+  # it "does something useful" do
+  #   expect(KansaiTrainInfo.greet).to eq("hello")
+  # end
 end
