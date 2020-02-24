@@ -5,7 +5,11 @@ module KansaiTrainInfo
   class << self
     PAGES = {
       大阪環状線: [4,2,263],
-      近鉄京都線: [6,5,288]
+      近鉄京都線: [6,5,288],
+      阪急京都線: [8, 2, 306],
+      御堂筋線: [10, 3, 321],
+      烏丸線: [34, 2, 318],
+      東西線: [34, 3, 319]
     }.freeze
 
     def get(route_array, url: false)
