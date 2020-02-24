@@ -3,9 +3,9 @@ require 'open-uri'
 
 module KansaiTrainInfo
   class << self
-    PAGES = {
-      大阪環状線: [4,2,263],
-      近鉄京都線: [6,5,288],
+    LINES = {
+      大阪環状線: [4, 2, 263],
+      近鉄京都線: [6, 5, 288],
       阪急京都線: [8, 2, 306],
       御堂筋線: [10, 3, 321],
       烏丸線: [34, 2, 318],
@@ -16,11 +16,9 @@ module KansaiTrainInfo
       messages = []
 
       route_array.each do |route|
-        status_xpath = "//*[@id='mdAreaMajorLine']/div[#{PAGES[route.to_sym][0]}]/table/tr[#{PAGES[route.to_sym][1]}]/td[2]"
-        detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{PAGES[route.to_sym][2]}/0/"
-
+        status_xpath = "//*[@id='mdAreaMajorLine']/div[#{LINES[route.to_sym][0]}]/table/tr[#{LINES[route.to_sym][1]}]/td[2]"
+        detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{LINES[route.to_sym][2]}/0/"
         state = kansai_doc.xpath(status_xpath).first.text
-
         messages << message(route, state, url, detail_url)
       end
 
