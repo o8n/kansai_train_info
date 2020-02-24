@@ -47,13 +47,11 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
-    def message(route, state, url_option, detail_url)
+    def message(route, state, url, detail_url)
       state.slice!('[○]')
       state.slice!('[!]')
 
-        if state == '平常運転'
-          puts "#{route}は#{state}です"
-        end
+      puts "#{route}は#{state}です" if state == '平常運転'
 
       message = case state
                 when '運転状況'
@@ -64,11 +62,9 @@ module KansaiTrainInfo
                   "#{route}は#{state}しています。"
                 end
 
-      if url_option
-        message + "\n" + description(detail_url) + "\n" + detail_url
-      else
-        message + "\n" + description(detail_url)
-      end
+      show_message = "#{message} #{description(detail_url)}"
+
+      url ? show_message + detail_url : show_message
     end
   end
 end
