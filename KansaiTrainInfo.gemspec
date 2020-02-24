@@ -3,20 +3,13 @@ require_relative 'lib/KansaiTrainInfo/version'
 Gem::Specification.new do |spec|
   spec.name          = "KansaiTrainInfo"
   spec.version       = KansaiTrainInfo::VERSION
-  spec.authors       = ["okamotchan"]
+  spec.authors       = ["o8n"]
   spec.email         = ["m.okamotchan@gmail.com"]
 
-  spec.summary       = %q{関西の鉄道運行状況をチェック}
-  spec.description   = %q{関西の鉄道運行状況をチェック}
-  spec.homepage      = "https://github.com/okamotchan"
+  spec.summary       = %q{check train info in kansai area}
+  spec.description   = %q{you can check train info in kansai area}
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
-
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
-  spec.metadata["https://github.com/okamotchan"] = spec.homepage
-  spec.metadata["https://github.com/okamotchan"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["https://github.com/okamotchan"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
