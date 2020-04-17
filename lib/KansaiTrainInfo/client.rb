@@ -12,6 +12,7 @@ module KansaiTrainInfo
       東西線: [34, 3, 319]
     }.freeze
 
+    # 入力された路線を検索、運行情報を表示する
     def get(route_array, url: false)
       messages = []
 
@@ -25,6 +26,7 @@ module KansaiTrainInfo
       messages
     end
 
+    # ページ全体のHTMLを探索する
     def kansai_doc
       charset = nil
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
@@ -35,6 +37,7 @@ module KansaiTrainInfo
       Nokogiri::HTML.parse(html, nil, charset)
     end
 
+    # 路線の詳細ページから運行情報を取得
     def description(detail_url)
       charset = nil
       detail_html = URI.parse(detail_url).open do |f|
@@ -45,6 +48,7 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
+    # 運行情報の表示ロジック
     def message(route, state, url, detail_url)
       state.slice!('[○]')
       state.slice!('[!]')
