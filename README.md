@@ -1,5 +1,7 @@
 # KansaiTrainInfo
 
+![./kansai.gif](./kansai.gif)
+
 ## Usage
 
 ``` sh
