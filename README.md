@@ -11,3 +11,5 @@ irb(main):001:0> require 'KansaiTrainInfo'
 irb(main):002:0> KansaiTrainInfo.get(['大阪環状線'])
 大阪環状線は平常運転です
 ```
+## License
+MIT
