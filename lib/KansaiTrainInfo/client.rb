@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'open-uri'
 
+# module
 module KansaiTrainInfo
   class << self
     LINES = {
@@ -12,7 +15,6 @@ module KansaiTrainInfo
       東西線: [34, 3, 319]
     }.freeze
 
-    # 入力された路線を検索、運行情報を表示する
     def get(route_array, url: false)
       messages = []
 
@@ -26,18 +28,20 @@ module KansaiTrainInfo
       messages
     end
 
-    # ページ全体のHTMLを探索する
+    # search HTML in pages
     def kansai_doc
       charset = nil
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
-        html = open(url) do |f|
-          charset = f.charset
-          f.read
-        end
+
+      html = open(url) do |f|
+        charset = f.charset
+        f.read
+      end
+
       Nokogiri::HTML.parse(html, nil, charset)
     end
 
-    # 路線の詳細ページから運行情報を取得
+    # get infomation
     def description(detail_url)
       charset = nil
       detail_html = URI.parse(detail_url).open do |f|
@@ -48,7 +52,7 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
-    # 運行情報の表示ロジック
+    # show logic
     def message(route, state, url, detail_url)
       state.slice!('[○]')
       state.slice!('[!]')
