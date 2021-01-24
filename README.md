@@ -39,6 +39,3 @@ irb(main):003:0> $: << 'lib'
 irb(main):012:0> require 'KansaiTrainInfo'
 => true
 ```
-
-## License
-MIT
