@@ -72,5 +72,13 @@ module KansaiTrainInfo
 
       url ? show_message + detail_url : show_message
     end
+
+    def help
+      print "利用可能な路線："
+      print "\n"
+      print "\n"
+      print "大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
+      print "\n"
+    end
   end
 end

@@ -8,5 +8,10 @@ module KansaiTrainInfo
         print "\n"
       end
     end
+
+    desc "KansaiTrainInfo help", "Help"
+    def help
+      texts = KansaiTrainInfo.help
+    end
   end
 end
