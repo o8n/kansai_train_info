@@ -1,9 +1,7 @@
-# frozen_string_literal: true
-
-require 'nokogiri'
+# flozen_string_literal: true
 require 'open-uri'
+require 'nokogiri'
 
-# module
 module KansaiTrainInfo
   class << self
     LINES = {
@@ -15,10 +13,14 @@ module KansaiTrainInfo
       東西線: [34, 3, 319]
     }.freeze
 
+    # rubocop:disable Metrics/AbcSize, Layout/LineLength
     def get(route_array, url: false)
       messages = []
 
       route_array.each do |route|
+        line = LINES[route.to_sym]
+        raise KeyError, "Invalid route: #{route}" unless line
+
         status_xpath = "//*[@id='mdAreaMajorLine']/div[#{LINES[route.to_sym][0]}]/table/tr[#{LINES[route.to_sym][1]}]/td[2]"
         detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{LINES[route.to_sym][2]}/0/"
         state = kansai_doc.xpath(status_xpath).first.text
@@ -27,13 +29,13 @@ module KansaiTrainInfo
 
       messages
     end
+    # rubocop:enable Metrics/AbcSize, Layout/LineLength
 
-    # search HTML in pages
     def kansai_doc
       charset = nil
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
 
-      html = open(url) do |f|
+      html = URI.open(url) do |f|
         charset = f.charset
         f.read
       end
@@ -41,10 +43,9 @@ module KansaiTrainInfo
       Nokogiri::HTML.parse(html, nil, charset)
     end
 
-    # get infomation
     def description(detail_url)
       charset = nil
-      detail_html = URI.parse(detail_url).open do |f|
+      detail_html = URI.open(detail_url) do |f|
         charset = f.charset
         f.read
       end
@@ -52,7 +53,6 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
-    # show logic
     def message(route, state, url, detail_url)
       state.slice!('[○]')
       state.slice!('[!]')
@@ -74,10 +74,10 @@ module KansaiTrainInfo
     end
 
     def help
-      print "利用可能な路線："
+      print '利用可能な路線：'
       print "\n"
       print "\n"
-      print "大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
+      print '大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線'
       print "\n"
     end
   end

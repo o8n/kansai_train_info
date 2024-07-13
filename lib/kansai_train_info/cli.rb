@@ -11,7 +11,7 @@ module KansaiTrainInfo
 
     desc "KansaiTrainInfo help", "Help"
     def help
-      texts = KansaiTrainInfo.help
+      KansaiTrainInfo.help
     end
   end
 end

@@ -1,7 +1,7 @@
-require_relative 'lib/KansaiTrainInfo/version'
+require_relative 'lib/kansai_train_info/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'KansaiTrainInfo'
+  spec.name          = 'kansai_train_info'
   spec.version       = KansaiTrainInfo::VERSION
   spec.authors       = ['o8n']
   spec.email         = ['m.okamotchan@gmail.com']

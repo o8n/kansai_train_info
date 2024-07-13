@@ -1,23 +1,26 @@
 # KansaiTrainInfo
-WIP
 
-![./kansai.gif](./kansai.gif)
+obtain train operation status in the Kansai region of Japan
 
 ## Usage
 
 ``` sh
-irb
 irb(main):001:0> require 'KansaiTrainInfo'
 => true
 irb(main):002:0> KansaiTrainInfo.get(['大阪環状線'])
 大阪環状線は平常運転です
 ```
 
-now support: 大阪環状線, 近鉄京都線, 阪急京都線, 御堂筋線, 烏丸線, 東西線
+now support: `大阪環状線, 近鉄京都線, 阪急京都線, 御堂筋線, 烏丸線, 東西線`
 
-### troubleshoot
+## requirements
 
-When you catch
+Ruby >= 3.0.0
+
+
+<details><summary>Trouble Shoot</summary>
+
+### can't read gem
 
 ```sh
 irb(main):001:0> require 'KansaiTrainInfo'
@@ -39,3 +42,5 @@ irb(main):003:0> $: << 'lib'
 irb(main):012:0> require 'KansaiTrainInfo'
 => true
 ```
+
+</details>
