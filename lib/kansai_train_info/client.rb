@@ -23,7 +23,7 @@ module KansaiTrainInfo
 
         status_xpath = "//*[@id='mdAreaMajorLine']/div[#{LINES[route.to_sym][0]}]/table/tr[#{LINES[route.to_sym][1]}]/td[2]"
         detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{LINES[route.to_sym][2]}/0/"
-        state = kansai_doc.xpath(status_xpath).first.text
+        state = kansai_doc.xpath(status_xpath).first&.text
         messages << message(route, state, url, detail_url)
       end
 
@@ -53,12 +53,13 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def message(route, state, url, detail_url)
-      state.slice!('[○]')
-      state.slice!('[!]')
+      return "#{route}は運行情報がありません" if state.nil?
 
+      state&.slice!('[○]')
+      state&.slice!('[!]')
       puts "#{route}は#{state}です" if state == '平常運転'
-
       message = case state
                 when '運転状況'
                   "#{route}は#{state}に変更があります。"
@@ -67,11 +68,10 @@ module KansaiTrainInfo
                 when '運転見合わせ'
                   "#{route}は#{state}しています。"
                 end
-
       show_message = "#{message} #{description(detail_url)}"
-
       url ? show_message + detail_url : show_message
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def help
       print '利用可能な路線：'
