@@ -1,11 +1,19 @@
-# KansaiTrainInfo
+# kansai_train_info
 
 obtain train operation status in the Kansai region of Japan
 
 ## Usage
 
+
+`gem install kansai_train_info`
+
+or
+
+gemfile: `gem 'kansai_train_info', '~> 0.2.0'`
+
+
 ``` sh
-irb(main):001:0> require 'KansaiTrainInfo'
+irb(main):001:0> require 'kansai_train_info'
 => true
 irb(main):002:0> KansaiTrainInfo.get(['大阪環状線'])
 大阪環状線は平常運転です
@@ -23,7 +31,7 @@ Ruby >= 3.0.0
 ### can't read gem
 
 ```sh
-irb(main):001:0> require 'KansaiTrainInfo'
+irb(main):001:0> require 'kansai_train_info'
 Traceback (most recent call last):
         6: from /Users/name/.rbenv/versions/2.7.1/bin/irb:23:in `<main>'
         5: from /Users/name/.rbenv/versions/2.7.1/bin/irb:23:in `load'

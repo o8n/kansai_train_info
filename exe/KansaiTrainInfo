@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'KansaiTrainInfo'
+require 'kansai_train_info'
 
 KansaiTrainInfo::CLI.start(ARGV)
