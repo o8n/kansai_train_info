@@ -26,8 +26,11 @@ module KansaiTrainInfo
         state = kansai_doc.xpath(status_xpath).first&.text
         messages << message(route, state, url, detail_url)
       end
-
-      messages
+      if messages.empty?
+        puts '利用可能な路線を入力してください'
+      else
+        messages.join(', ')
+      end
     end
     # rubocop:enable Metrics/AbcSize, Layout/LineLength
 
@@ -74,11 +77,8 @@ module KansaiTrainInfo
     # rubocop:enable Metrics/CyclomaticComplexity
 
     def help
-      print '利用可能な路線：'
-      print "\n"
-      print "\n"
-      print '大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線'
-      print "\n"
+      help_message = "利用可能な路線：\n大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
+      puts help_message
     end
   end
 end

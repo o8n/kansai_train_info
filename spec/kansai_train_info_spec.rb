@@ -1,6 +1,7 @@
 # spec/kansai_train_info_spec.rb
 require 'kansai_train_info'
 require 'webmock/rspec'
+require 'pry'
 
 RSpec.describe KansaiTrainInfo do
   before do
@@ -15,8 +16,7 @@ RSpec.describe KansaiTrainInfo do
     it 'returns operation status for given routes' do
       routes = %w[大阪環状線 近鉄京都線]
       result = KansaiTrainInfo.get(routes)
-      expect(result).to be_an_instance_of(Array)
-      expect(result.size).to eq(2)
+      expect(result).to be_an_instance_of(String)
     end
 
     it 'raises an error for invalid route' do

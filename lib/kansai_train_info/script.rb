@@ -14,10 +14,6 @@ end
 
 doc = Nokogiri::HTML.parse(html, nil, charset)
 
-# doc.xpath('//div[@class="labelSmall"]').each do |node|
-#   p node.xpath('h3').text
-# end
-
 status_xpath = "//*[@id='mdAreaMajorLine']/div[4]/table/tr[3]/td[1]"
 
 puts doc.xpath(status_xpath).first.text
