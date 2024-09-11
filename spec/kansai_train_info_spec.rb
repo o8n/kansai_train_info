@@ -1,3 +1,4 @@
+# typed: false
 # spec/kansai_train_info_spec.rb
 require 'kansai_train_info'
 require 'webmock/rspec'

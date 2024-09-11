@@ -1,3 +1,4 @@
+# typed: strict
 require "thor"
 require "kansai_train_info/version"
 require "kansai_train_info/cli"
