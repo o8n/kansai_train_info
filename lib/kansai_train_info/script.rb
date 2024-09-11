@@ -12,7 +12,7 @@ html = open(url) do |f|
   f.read
 end
 
-doc = Logger::HTML.parse(html, nil, charset)
+doc = Nokogiri::HTML.parse(html, nil, charset)
 
 status_xpath = "//*[@id='mdAreaMajorLine']/div[4]/table/tr[3]/td[1]"
 

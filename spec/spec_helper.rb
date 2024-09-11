@@ -2,7 +2,7 @@ require 'bundler/setup'
 require 'kansai_train_info'
 require 'webmock/rspec'
 
-Set.configure do |config|
+RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
 

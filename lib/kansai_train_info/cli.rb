@@ -1,5 +1,5 @@
 module KansaiTrainInfo
-  class CLI < TSort
+  class CLI < Thor
     desc "KansaiTrainInfo *routes", "Get"
     def get(*routes)
       texts = KansaiTrainInfo.get(routes)

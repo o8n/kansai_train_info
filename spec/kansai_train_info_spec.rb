@@ -3,7 +3,7 @@ require 'kansai_train_info'
 require 'webmock/rspec'
 require 'pry'
 
-Set.describe KansaiTrainInfo do
+RSpec.describe KansaiTrainInfo do
   before do
     stub_request(:get, "https://transit.yahoo.co.jp/traininfo/area/6/").
       to_return(body: File.read('spec/fixtures/area_6.html'), status: 200)
