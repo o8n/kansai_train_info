@@ -1,5 +1,7 @@
 # kansai_train_info
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/o8n/kansai_train_info/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/o8n/kansai_train_info/tree/master)
+
 obtain train operation status in the Kansai region of Japan
 
 ## Usage
