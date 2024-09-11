@@ -10,10 +10,6 @@ gem 'pry'
 
 gem 'rubocop', require: false
 
-gem 'sorbet', :group => :development
-gem 'sorbet-runtime'
-gem 'tapioca', require: false, :group => [:development, :test]
-
 group :test do
   gem 'simplecov', require: false
   gem 'webmock'
