@@ -4,27 +4,40 @@ orbs:
   ruby: circleci/ruby@2.1.1
 
 jobs:
-  build:
+  rspec:
     docker:
       - image: cimg/ruby:3.0
-
     steps:
       - checkout
-      - run:
-          name: Which bundler?
-          command: bundle -v
       - ruby/install-deps
       - run:
-          name: Run Rspec tests
+          name: Run RSpec tests
           command: bundle exec rspec
+
+  rubocop:
+    docker:
+      - image: cimg/ruby:3.0
+    steps:
+      - checkout
+      - ruby/install-deps
       - run:
-          name: Run Rubocop
+          name: Run RuboCop
           command: bundle exec rubocop
+
+  rbs:
+    docker:
+      - image: cimg/ruby:3.0
+    steps:
+      - checkout
+      - ruby/install-deps
       - run:
-          name: Run rbs
+          name: Run RBS
           command: bundle exec srb tc
 
 workflows:
-  sample:
+  version: 2
+  test-workflow:
     jobs:
-      - build
+      - rspec
+      - rubocop
+      - rbs
