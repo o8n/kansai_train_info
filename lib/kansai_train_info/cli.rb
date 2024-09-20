@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+# typed: ignore
+
+require 'thor'
+
 module KansaiTrainInfo
   class CLI < Thor
     desc "KansaiTrainInfo *routes", "Get"

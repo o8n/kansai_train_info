@@ -1,3 +1,4 @@
+# typed: false
 require 'bundler/setup'
 require 'kansai_train_info'
 require 'webmock/rspec'
