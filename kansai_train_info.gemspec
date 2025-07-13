@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'nokogiri', '~> 1.15'
+  spec.add_dependency 'nokogiri', '~> 1.16'
   spec.add_dependency 'thor', '~> 1.0'
 
   spec.metadata['rubygems_mfa_required'] = 'true'

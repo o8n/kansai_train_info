@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     kansai_train_info (0.2.1)
-      nokogiri (~> 1.15)
+      nokogiri (~> 1.16)
       thor (~> 1.0)
 
 GEM
