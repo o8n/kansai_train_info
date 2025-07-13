@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'check train info in kansai area'
   spec.description   = 'you can check train info in kansai area'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
 
   # Specify which files should be added to the gem when it is released.
   spec.files         = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']
