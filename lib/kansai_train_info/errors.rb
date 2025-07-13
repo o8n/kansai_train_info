@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+module KansaiTrainInfo
+  class Error < StandardError; end
+
+  class NetworkError < Error; end
+
+  class TimeoutError < NetworkError; end
+
+  class ParseError < Error; end
+
+  class InvalidRouteError < Error; end
+end
