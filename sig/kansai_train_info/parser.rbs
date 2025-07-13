@@ -1,0 +1,9 @@
+module KansaiTrainInfo
+  class Parser
+    attr_reader document: untyped
+
+    def initialize: (String html) -> void
+    def extract_status: (String xpath) -> String?
+    def extract_detail: (String xpath) -> String
+  end
+end

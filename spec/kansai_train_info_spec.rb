@@ -37,7 +37,7 @@ RSpec.describe KansaiTrainInfo do
         stub_request(:get, 'https://transit.yahoo.co.jp/traininfo/area/6/').to_timeout
         routes = ['大阪環状線']
         result = KansaiTrainInfo.get(routes)
-        expect(result).to include('データ解析エラー')
+        expect(result).to include('ネットワークエラー')
       end
     end
 
@@ -51,7 +51,7 @@ RSpec.describe KansaiTrainInfo do
 
         routes = ['大阪環状線']
         result = KansaiTrainInfo.get(routes)
-        expect(result).to include('データ解析エラー')
+        expect(result).to include('ネットワークエラー')
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe KansaiTrainInfo do
 
         routes = ['大阪環状線']
         result = KansaiTrainInfo.get(routes)
-        expect(result).to include('データ解析エラー')
+        expect(result).to include('ネットワークエラー')
       end
     end
 
