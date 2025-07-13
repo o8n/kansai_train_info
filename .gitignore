@@ -12,3 +12,9 @@
 vendor/
 *.gem
 coverage/
+
+# Bundler config
+/.bundler/
+
+# Ruby version file
+/.ruby-version.local

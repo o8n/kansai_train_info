@@ -2,18 +2,17 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rake', '~> 12.3'
-gem 'rspec', '~> 3.0'
-
-gem 'bundler'
-gem 'pry'
-
-gem 'rubocop', require: false
-
-gem 'rbs', '~> 3.0', group: :development
-gem 'steep', '~> 1.6', group: :development
+group :development do
+  gem 'bundler', '~> 2.0'
+  gem 'pry'
+  gem 'rake', '~> 13.0'
+  gem 'rbs', '~> 3.0'
+  gem 'rubocop', require: false
+  gem 'steep', '~> 1.6'
+end
 
 group :test do
+  gem 'rspec', '~> 3.0'
   gem 'simplecov', require: false
   gem 'webmock'
 end
