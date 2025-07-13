@@ -7,6 +7,8 @@ require 'kansai_train_info/errors'
 
 module KansaiTrainInfo
   class << self
+    # 路線情報の定義
+    # フォーマット: 路線名 => [エリアインデックス, 行インデックス, 詳細ID]
     LINES = {
       大阪環状線: [4, 2, 263],
       近鉄京都線: [6, 5, 288],
@@ -16,6 +18,19 @@ module KansaiTrainInfo
       東西線: [34, 3, 319]
     }.freeze
 
+    # 指定された路線の運行情報を取得する
+    #
+    # @param route_array [Array<String>] 取得したい路線名の配列
+    # @param url [Boolean] 詳細URLを含めるかどうか（デフォルト: false）
+    # @return [String, nil] 運行情報のメッセージ。正常運転の場合はnil
+    # @raise [InvalidRouteError] 無効な路線名が指定された場合
+    #
+    # @example 単一路線の情報を取得
+    #   KansaiTrainInfo.get(['大阪環状線'])
+    #
+    # @example 複数路線でURLを含める
+    #   KansaiTrainInfo.get(['大阪環状線', '御堂筋線'], url: true)
+    #
     # rubocop:disable Layout/LineLength
     def get(route_array, url: false)
       messages = []
@@ -82,6 +97,14 @@ module KansaiTrainInfo
       url ? show_message + detail_url : show_message
     end
 
+    # 利用可能な路線を表示する
+    #
+    # @return [void]
+    #
+    # @example
+    #   KansaiTrainInfo.help
+    #   # => 利用可能な路線：
+    #   # => 大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線
     def help
       help_message = "利用可能な路線：\n大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
       puts help_message
