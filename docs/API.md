@@ -1,5 +1,7 @@
 # API Documentation
 
+[English](API.en.md)
+
 ## KansaiTrainInfo
 
 ### メソッド

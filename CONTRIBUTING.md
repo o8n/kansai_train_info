@@ -1,5 +1,7 @@
 # Contributing to kansai_train_info
 
+[English](CONTRIBUTING.en.md)
+
 このプロジェクトへの貢献を検討していただきありがとうございます！
 
 ## 開発環境のセットアップ

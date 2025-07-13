@@ -1,5 +1,7 @@
 # Configuration Guide
 
+[English](CONFIGURATION.en.md)
+
 kansai_train_infoは設定をカスタマイズすることができます。
 
 ## 基本的な設定
