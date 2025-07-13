@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class Thor
+  def self.desc: (String usage, String description) -> void
+end

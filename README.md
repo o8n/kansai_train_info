@@ -27,6 +27,20 @@ now support: `大阪環状線, 近鉄京都線, 阪急京都線, 御堂筋線, �
 
 Ruby >= 3.0.0
 
+## Development
+
+### Type Checking
+
+This gem uses RBS for type definitions and Steep for type checking.
+
+```sh
+# Run type checking
+bundle exec steep check
+
+# Or use rake task
+bundle exec rake steep
+```
+
 
 <details><summary>Trouble Shoot</summary>
 

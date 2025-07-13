@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+module KansaiTrainInfo
+  class CLI < Thor
+    def get: (*String routes) -> void
+    def help: () -> void
+  end
+end
