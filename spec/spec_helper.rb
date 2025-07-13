@@ -1,3 +1,16 @@
+require 'simplecov'
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/vendor/'
+
+  minimum_coverage 90
+  refuse_coverage_drop
+
+  add_group 'Libraries', 'lib'
+  add_group 'CLI', 'lib/kansai_train_info/cli'
+  add_group 'Client', 'lib/kansai_train_info/client'
+end
+
 require 'bundler/setup'
 require 'kansai_train_info'
 require 'webmock/rspec'

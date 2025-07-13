@@ -29,6 +29,23 @@ Ruby >= 3.0.0
 
 ## Development
 
+### Testing
+
+Run tests with coverage report:
+
+```sh
+# Run all tests
+bundle exec rspec
+
+# Run specific test file
+bundle exec rspec spec/kansai_train_info/client_spec.rb
+
+# View coverage report
+open coverage/index.html
+```
+
+The project maintains a minimum test coverage of 90%.
+
 ### Type Checking
 
 This gem uses RBS for type definitions and Steep for type checking.
