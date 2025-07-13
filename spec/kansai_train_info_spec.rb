@@ -5,11 +5,11 @@ require 'pry'
 
 RSpec.describe KansaiTrainInfo do
   before do
-    stub_request(:get, "https://transit.yahoo.co.jp/traininfo/area/6/").
-      to_return(body: File.read('spec/fixtures/area_6.html'), status: 200)
+    stub_request(:get, 'https://transit.yahoo.co.jp/traininfo/area/6/')
+      .to_return(body: File.read('spec/fixtures/area_6.html'), status: 200)
 
-    stub_request(:get, %r{https://transit.yahoo.co.jp/traininfo/detail/.*}).
-      to_return(body: File.read('spec/fixtures/detail.html'), status: 200)
+    stub_request(:get, %r{https://transit.yahoo.co.jp/traininfo/detail/.*})
+      .to_return(body: File.read('spec/fixtures/detail.html'), status: 200)
   end
 
   describe '.get' do
