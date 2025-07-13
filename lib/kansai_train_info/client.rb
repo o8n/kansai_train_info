@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'net/http'
-require 'open-uri'
 require 'nokogiri'
 require 'timeout'
+require 'kansai_train_info/errors'
 
 module KansaiTrainInfo
   class << self
@@ -22,12 +22,18 @@ module KansaiTrainInfo
 
       route_array.each do |route|
         line = LINES[route.to_sym]
-        raise KeyError, "Invalid route: #{route}" unless line
+        raise InvalidRouteError, "Invalid route: #{route}" unless line
 
         status_xpath = "//*[@id='mdAreaMajorLine']/div[#{LINES[route.to_sym][0]}]/table/tr[#{LINES[route.to_sym][1]}]/td[2]"
         detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{LINES[route.to_sym][2]}/0/"
-        state = kansai_doc.xpath(status_xpath).first&.text
-        messages << message(route, state, url, detail_url)
+        begin
+          state = kansai_doc.xpath(status_xpath).first&.text
+          messages << message(route, state, url, detail_url)
+        rescue NetworkError => e
+          messages << "#{route}: ネットワークエラー - #{e.message}"
+        rescue ParseError => e
+          messages << "#{route}: データ解析エラー - #{e.message}"
+        end
       end
       if messages.empty?
         puts '利用可能な路線を入力してください'
@@ -41,12 +47,19 @@ module KansaiTrainInfo
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
       html = fetch_url(url)
       Nokogiri::HTML.parse(html, nil, 'utf-8')
+    rescue StandardError => e
+      raise ParseError, "HTMLの解析に失敗しました: #{e.message}"
     end
 
     def description(detail_url)
       detail_html = fetch_url(detail_url)
       detail_doc = Nokogiri::HTML.parse(detail_html, nil, 'utf-8')
-      detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
+      element = detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first
+      element&.text || '詳細情報を取得できませんでした'
+    rescue NetworkError => e
+      "詳細情報取得エラー: #{e.message}"
+    rescue StandardError => e
+      "詳細情報解析エラー: #{e.message}"
     end
 
     def message(route, state, url, detail_url)
@@ -63,6 +76,8 @@ module KansaiTrainInfo
                 when '運転見合わせ'
                   "#{route}は#{state}しています。"
                 end
+      return "#{route}は#{state}です" if message.nil?
+
       show_message = "#{message} #{description(detail_url)}"
       url ? show_message + detail_url : show_message
     end
@@ -74,9 +89,12 @@ module KansaiTrainInfo
 
     private
 
-    def fetch_url(url_string)
+    DEFAULT_TIMEOUT = 10
+    MAX_RETRIES = 3
+
+    def fetch_url(url_string, retries: 0)
       uri = URI.parse(url_string)
-      Timeout.timeout(10) do
+      Timeout.timeout(DEFAULT_TIMEOUT) do
         Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           request = Net::HTTP::Get.new(uri)
           request['User-Agent'] = "kansai_train_info/#{KansaiTrainInfo::VERSION}"
@@ -86,14 +104,19 @@ module KansaiTrainInfo
           when Net::HTTPSuccess
             response.body.force_encoding('UTF-8')
           else
-            raise "HTTP Error: #{response.code} #{response.message}"
+            raise NetworkError, "HTTP Error: #{response.code} #{response.message}"
           end
         end
       end
     rescue Timeout::Error
-      raise 'Request timeout'
+      raise TimeoutError, "Request timeout after #{DEFAULT_TIMEOUT} seconds"
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+      raise NetworkError, "Connection failed after #{MAX_RETRIES} retries: #{e.message}" unless retries < MAX_RETRIES
+
+      sleep(2**retries)
+      fetch_url(url_string, retries: retries + 1)
     rescue StandardError => e
-      raise "Network error: #{e.message}"
+      raise NetworkError, "Network error: #{e.message}"
     end
   end
 end
