@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+module Nokogiri
+  module HTML
+    class Document
+      def xpath: (String path) -> NodeSet
+    end
+    
+    class NodeSet
+      def first: () -> Node?
+    end
+    
+    class Node
+      def text: () -> String
+    end
+    
+    def self.parse: (String html, String? url, String? encoding) -> Document
+  end
+end

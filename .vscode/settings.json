@@ -1,0 +1,4 @@
+{
+  "steep.enabled": true,
+  "steep.steepPath": "bundle exec steep"
+}

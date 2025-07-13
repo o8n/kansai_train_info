@@ -2,11 +2,8 @@ module KansaiTrainInfo
   class CLI < Thor
     desc 'KansaiTrainInfo *routes', 'Get'
     def get(*routes)
-      texts = KansaiTrainInfo.get(routes)
-      texts.each do |text|
-        print text
-        print "\n"
-      end
+      result = KansaiTrainInfo.get(routes)
+      puts result if result
     end
 
     desc 'KansaiTrainInfo help', 'Help'

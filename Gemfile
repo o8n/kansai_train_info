@@ -10,9 +10,8 @@ gem 'pry'
 
 gem 'rubocop', require: false
 
-gem 'sorbet', group: :development
-gem 'sorbet-runtime'
-gem 'tapioca', require: false, group: %i[development test]
+gem 'rbs', '~> 3.0', group: :development
+gem 'steep', '~> 1.6', group: :development
 
 group :test do
   gem 'simplecov', require: false

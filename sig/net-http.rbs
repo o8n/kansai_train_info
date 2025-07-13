@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+module Net
+  class HTTP
+    class Get < HTTPRequest
+    end
+    
+    class HTTPResponse
+      def code: () -> String
+      def message: () -> String
+      def body: () -> String
+    end
+    
+    class HTTPSuccess < HTTPResponse
+    end
+    
+    def self.start: (String host, Integer port, ?use_ssl: bool) { (HTTP) -> untyped } -> untyped
+    def request: (HTTPRequest request) -> HTTPResponse
+  end
+  
+  class HTTPRequest
+    def []=: (String key, String value) -> void
+  end
+end
+
+module URI
+  def self.parse: (String uri) -> URI::Generic
+  
+  class Generic
+    def host: () -> String?
+    def port: () -> Integer?
+    def scheme: () -> String?
+  end
+end
