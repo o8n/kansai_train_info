@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'net/http'
 require 'open-uri'
 require 'nokogiri'
+require 'timeout'
 
 module KansaiTrainInfo
   class << self
@@ -36,24 +38,14 @@ module KansaiTrainInfo
     # rubocop:enable Metrics/AbcSize, Layout/LineLength
 
     def kansai_doc
-      charset = nil
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
-
-      html = URI.open(url) do |f|
-        charset = f.charset
-        f.read
-      end
-
-      Nokogiri::HTML.parse(html, nil, charset)
+      html = fetch_url(url)
+      Nokogiri::HTML.parse(html, nil, 'utf-8')
     end
 
     def description(detail_url)
-      charset = nil
-      detail_html = URI.open(detail_url) do |f|
-        charset = f.charset
-        f.read
-      end
-      detail_doc = Nokogiri::HTML.parse(detail_html, nil, charset)
+      detail_html = fetch_url(detail_url)
+      detail_doc = Nokogiri::HTML.parse(detail_html, nil, 'utf-8')
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
@@ -78,6 +70,30 @@ module KansaiTrainInfo
     def help
       help_message = "利用可能な路線：\n大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
       puts help_message
+    end
+
+    private
+
+    def fetch_url(url_string)
+      uri = URI.parse(url_string)
+      Timeout.timeout(10) do
+        Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+          request = Net::HTTP::Get.new(uri)
+          request['User-Agent'] = "kansai_train_info/#{KansaiTrainInfo::VERSION}"
+          response = http.request(request)
+
+          case response
+          when Net::HTTPSuccess
+            response.body.force_encoding('UTF-8')
+          else
+            raise "HTTP Error: #{response.code} #{response.message}"
+          end
+        end
+      end
+    rescue Timeout::Error
+      raise 'Request timeout'
+    rescue StandardError => e
+      raise "Network error: #{e.message}"
     end
   end
 end
