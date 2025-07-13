@@ -11,7 +11,7 @@ KansaiTrainInfo.configure do |config|
 end
 
 # 通常通り使用
-puts KansaiTrainInfo.get(['大阪環状線', '御堂筋線'])
+puts KansaiTrainInfo.get(%w[大阪環状線 御堂筋線])
 
 # 設定をデフォルトに戻す
 KansaiTrainInfo.reset_configuration!

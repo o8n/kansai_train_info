@@ -11,7 +11,7 @@ KansaiTrainInfo.route_registry.register(
 )
 
 # 追加した路線も含めて取得
-routes = ['大阪環状線', 'JR神戸線']
+routes = %w[大阪環状線 JR神戸線]
 puts KansaiTrainInfo.get(routes)
 
 # 利用可能な全路線を表示

@@ -9,9 +9,10 @@ module KansaiTrainInfo
       @config = config
     end
 
+    # rubocop:disable Metrics/AbcSize
     def get(url, retries: 0)
       uri = URI.parse(url)
-      
+
       Timeout.timeout(@config.timeout) do
         Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           request = Net::HTTP::Get.new(uri)
@@ -29,14 +30,15 @@ module KansaiTrainInfo
     rescue Timeout::Error
       raise TimeoutError, "Request timeout after #{@config.timeout} seconds"
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-      if retries < @config.max_retries
-        sleep(@config.retry_delays[retries])
-        get(url, retries: retries + 1)
-      else
+      unless retries < @config.max_retries
         raise NetworkError, "Connection failed after #{@config.max_retries} retries: #{e.message}"
       end
+
+      sleep(@config.retry_delays[retries])
+      get(url, retries: retries + 1)
     rescue StandardError => e
       raise NetworkError, "Network error: #{e.message}"
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

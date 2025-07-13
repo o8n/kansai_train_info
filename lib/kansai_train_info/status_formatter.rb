@@ -22,7 +22,7 @@ module KansaiTrainInfo
       return "#{@route_name}は運行情報がありません" if @raw_status.nil?
 
       status = clean_status(@raw_status)
-      
+
       if status == '平常運転'
         puts "#{@route_name}は#{status}です"
         return nil

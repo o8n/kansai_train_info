@@ -10,7 +10,9 @@ require 'kansai_train_info/parser'
 require 'kansai_train_info/route'
 require 'kansai_train_info/status_formatter'
 
+# rubocop:disable Metrics/ModuleLength
 module KansaiTrainInfo
+  # rubocop:disable Metrics/ClassLength
   class << self
     # Legacy constants for backward compatibility
     LINES = {
@@ -38,7 +40,7 @@ module KansaiTrainInfo
     # @example 複数路線でURLを含める
     #   KansaiTrainInfo.get(['大阪環状線', '御堂筋線'], url: true)
     #
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/PerceivedComplexity
     def get(route_array, url: false)
       if route_array.empty?
         puts '利用可能な路線を入力してください'
@@ -54,14 +56,14 @@ module KansaiTrainInfo
         begin
           status = fetch_route_status(route)
           description = status && status != '平常運転' ? fetch_description(route.detail_url) : nil
-          
+
           formatter = StatusFormatter.new(route_name, status)
           formatted_message = formatter.format(
             include_url: url,
             detail_url: route.detail_url,
             description: description
           )
-          
+
           messages << formatted_message if formatted_message
         rescue NetworkError => e
           messages << "#{route_name}: ネットワークエラー - #{e.message}"
@@ -69,11 +71,12 @@ module KansaiTrainInfo
           messages << "#{route_name}: データ解析エラー - #{e.message}"
         end
       end
-      
+
       return nil if messages.empty?
+
       messages.compact.join(', ')
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # 利用可能な路線を表示する
     #
@@ -148,9 +151,10 @@ module KansaiTrainInfo
     end
 
     # Legacy method for backward compatibility
+    # rubocop:disable Metrics/AbcSize
     def fetch_url(url, retries = 0)
       uri = URI.parse(url)
-      
+
       Timeout.timeout(KansaiTrainInfo.configuration.timeout) do
         Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           request = Net::HTTP::Get.new(uri)
@@ -168,15 +172,16 @@ module KansaiTrainInfo
     rescue Timeout::Error
       raise TimeoutError, "Request timeout after #{KansaiTrainInfo.configuration.timeout} seconds"
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-      if retries < KansaiTrainInfo.configuration.max_retries
-        sleep(KansaiTrainInfo.configuration.retry_delays[retries])
-        fetch_url(url, retries + 1)
-      else
+      unless retries < KansaiTrainInfo.configuration.max_retries
         raise NetworkError, "Connection failed after #{KansaiTrainInfo.configuration.max_retries} retries: #{e.message}"
       end
+
+      sleep(KansaiTrainInfo.configuration.retry_delays[retries])
+      fetch_url(url, retries + 1)
     rescue StandardError => e
       raise NetworkError, "Network error: #{e.message}"
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Legacy method for backward compatibility
     def kansai_doc
@@ -187,4 +192,6 @@ module KansaiTrainInfo
       raise ParseError, "HTMLの解析に失敗しました: #{e.message}"
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ModuleLength
