@@ -16,7 +16,7 @@ module KansaiTrainInfo
       東西線: [34, 3, 319]
     }.freeze
 
-    # rubocop:disable Metrics/AbcSize, Layout/LineLength
+    # rubocop:disable Layout/LineLength
     def get(route_array, url: false)
       messages = []
 
@@ -41,7 +41,7 @@ module KansaiTrainInfo
         messages.join(', ')
       end
     end
-    # rubocop:enable Metrics/AbcSize, Layout/LineLength
+    # rubocop:enable Layout/LineLength
 
     def kansai_doc
       url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
@@ -65,18 +65,18 @@ module KansaiTrainInfo
     def message(route, state, url, detail_url)
       return "#{route}は運行情報がありません" if state.nil?
 
-      state&.slice!('[○]')
-      state&.slice!('[!]')
-      puts "#{route}は#{state}です" if state == '平常運転'
-      message = case state
+      # Remove status indicators without modifying the original string
+      clean_state = state.gsub('[○]', '').gsub('[!]', '')
+      puts "#{route}は#{clean_state}です" if clean_state == '平常運転'
+      message = case clean_state
                 when '運転状況'
-                  "#{route}は#{state}に変更があります。"
+                  "#{route}は#{clean_state}に変更があります。"
                 when '列車遅延'
-                  "#{route}は#{state}があります。"
+                  "#{route}は#{clean_state}があります。"
                 when '運転見合わせ'
-                  "#{route}は#{state}しています。"
+                  "#{route}は#{clean_state}しています。"
                 end
-      return "#{route}は#{state}です" if message.nil?
+      return "#{route}は#{clean_state}です" if message.nil?
 
       show_message = "#{message} #{description(detail_url)}"
       url ? show_message + detail_url : show_message
@@ -87,10 +87,10 @@ module KansaiTrainInfo
       puts help_message
     end
 
-    private
-
     DEFAULT_TIMEOUT = 10
     MAX_RETRIES = 3
+
+    private
 
     def fetch_url(url_string, retries: 0)
       uri = URI.parse(url_string)
@@ -102,7 +102,8 @@ module KansaiTrainInfo
 
           case response
           when Net::HTTPSuccess
-            response.body.force_encoding('UTF-8')
+            # Create a mutable copy before force_encoding
+            response.body.dup.force_encoding('UTF-8')
           else
             raise NetworkError, "HTTP Error: #{response.code} #{response.message}"
           end

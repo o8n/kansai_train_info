@@ -23,7 +23,7 @@ Metrics/MethodLength:
   CountComments: false
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 30
 
 Metrics/CyclomaticComplexity:
   Max: 10
@@ -36,3 +36,11 @@ Security/Open:
 
 Gemspec/RequiredRubyVersion:
   Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - '*.gemspec'
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false

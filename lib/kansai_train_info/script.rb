@@ -14,7 +14,8 @@ html = Timeout.timeout(10) do
 
     case response
     when Net::HTTPSuccess
-      response.body.force_encoding('UTF-8')
+      # Create a mutable copy before force_encoding
+      response.body.dup.force_encoding('UTF-8')
     else
       raise "HTTP Error: #{response.code} #{response.message}"
     end

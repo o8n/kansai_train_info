@@ -8,4 +8,4 @@ task :steep do
   sh 'bundle exec steep check'
 end
 
-task default: [:spec, :steep]
+task default: %i[spec steep]

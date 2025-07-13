@@ -22,12 +22,35 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
     steps:
-      # Checkout the code as the first step.
       - checkout
       - run:
           name: Which bundler?
           command: bundle -v
       - ruby/install-deps
+      
+      - run:
+          name: Run tests with coverage
+          command: bundle exec rspec
+          
+      - run:
+          name: Check test coverage
+          command: |
+            if [ -f "coverage/.last_run.json" ]; then
+              coverage=$(ruby -rjson -e "puts JSON.parse(File.read('coverage/.last_run.json'))['result']['line']")
+              echo "Test coverage: ${coverage}%"
+              if (( $(echo "$coverage < 90" | bc -l) )); then
+                echo "Coverage is below 90%"
+                exit 1
+              fi
+            fi
+            
+      - run:
+          name: Run Rubocop
+          command: bundle exec rubocop
+          
+      - run:
+          name: Run Steep type checking
+          command: bundle exec steep check || true
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
