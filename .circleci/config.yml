@@ -42,8 +42,7 @@ jobs:
             mkdir -p /tmp/test-results
             bundle exec rspec --format progress \
                               --format RspecJunitFormatter \
-                              --out /tmp/test-results/rspec.xml \
-                              --format progress
+                              --out /tmp/test-results/rspec.xml
       
       - run:
           name: Check test coverage

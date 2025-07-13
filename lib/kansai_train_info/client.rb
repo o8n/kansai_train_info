@@ -154,10 +154,12 @@ module KansaiTrainInfo
     # rubocop:disable Metrics/AbcSize
     def fetch_url(url, retries = 0)
       uri = URI.parse(url)
+      raise NetworkError, "Invalid URL: #{url}" unless uri.is_a?(URI::HTTP)
 
       Timeout.timeout(KansaiTrainInfo.configuration.timeout) do
         Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-          request = Net::HTTP::Get.new(uri)
+          request_path = uri.path.empty? ? '/' : uri.path
+          request = Net::HTTP::Get.new(request_path)
           request['User-Agent'] = KansaiTrainInfo.configuration.user_agent
           response = http.request(request)
 
@@ -176,7 +178,7 @@ module KansaiTrainInfo
         raise NetworkError, "Connection failed after #{KansaiTrainInfo.configuration.max_retries} retries: #{e.message}"
       end
 
-      sleep(KansaiTrainInfo.configuration.retry_delays[retries])
+      Kernel.sleep(KansaiTrainInfo.configuration.retry_delays[retries])
       fetch_url(url, retries + 1)
     rescue StandardError => e
       raise NetworkError, "Network error: #{e.message}"
