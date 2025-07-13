@@ -1,6 +1,8 @@
 # kansai_train_info
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/o8n/kansai_train_info/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/o8n/kansai_train_info/tree/master)
+[![CI](https://github.com/o8n/kansai_train_info/actions/workflows/ci.yml/badge.svg)](https://github.com/o8n/kansai_train_info/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/o8n/kansai_train_info/branch/master/graph/badge.svg)](https://codecov.io/gh/o8n/kansai_train_info)
 [![Gem Version](https://badge.fury.io/rb/kansai_train_info.svg)](https://badge.fury.io/rb/kansai_train_info)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

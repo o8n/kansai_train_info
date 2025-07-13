@@ -13,6 +13,7 @@ end
 
 group :test do
   gem 'rspec', '~> 3.0'
+  gem 'rspec_junit_formatter'
   gem 'simplecov', require: false
   gem 'webmock'
 end
