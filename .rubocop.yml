@@ -1,5 +1,38 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'spec/fixtures/**/*'
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Metrics/MethodLength:
   Max: 30
   CountComments: false
-Style/FrozenStringLiteralComment:
-  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Layout/LineLength:
+  Max: 120
+
+Security/Open:
+  Enabled: true
+
+Gemspec/RequiredRubyVersion:
+  Enabled: true

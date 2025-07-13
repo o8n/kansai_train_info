@@ -1,4 +1,5 @@
-# flozen_string_literal: true
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'nokogiri'
 
@@ -56,7 +57,6 @@ module KansaiTrainInfo
       detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first.text
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def message(route, state, url, detail_url)
       return "#{route}は運行情報がありません" if state.nil?
 
@@ -74,7 +74,6 @@ module KansaiTrainInfo
       show_message = "#{message} #{description(detail_url)}"
       url ? show_message + detail_url : show_message
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def help
       help_message = "利用可能な路線：\n大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
