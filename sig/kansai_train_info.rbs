@@ -1,21 +1,9 @@
-# frozen_string_literal: true
-
 module KansaiTrainInfo
-  type route_info = [Integer, Integer, Integer]
-  type lines_hash = Hash[Symbol, route_info]
-  
-  LINES: lines_hash
-  
   def self.get: (Array[String] route_array, ?url: bool) -> String?
-  def self.kansai_doc: () -> Nokogiri::HTML::Document
-  def self.description: (String detail_url) -> String
-  def self.message: (String route, String? state, bool url, String detail_url) -> String
   def self.help: () -> void
-  
+
   private
-  
-  DEFAULT_TIMEOUT: Integer
-  MAX_RETRIES: Integer
-  
-  def self.fetch_url: (String url_string, ?retries: Integer) -> String
+  def self.http_client: () -> HttpClient
+  def self.fetch_route_status: (Route route) -> String?
+  def self.fetch_description: (String detail_url) -> String
 end

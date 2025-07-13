@@ -1,0 +1,8 @@
+module KansaiTrainInfo
+  class HttpClient
+    @config: Configuration
+
+    def initialize: (?Configuration config) -> void
+    def get: (String url, ?retries: Integer) -> String
+  end
+end

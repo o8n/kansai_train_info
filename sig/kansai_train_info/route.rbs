@@ -1,0 +1,28 @@
+module KansaiTrainInfo
+  class Route
+    attr_reader name: String
+    attr_reader area_index: Integer
+    attr_reader row_index: Integer
+    attr_reader detail_id: Integer
+
+    def initialize: (name: String, area_index: Integer, row_index: Integer, detail_id: Integer) -> void
+    def status_xpath: () -> String
+    def detail_url: () -> String
+    def to_sym: () -> Symbol
+  end
+
+  class RouteRegistry
+    @routes: Hash[Symbol, Route]
+
+    def initialize: () -> void
+    def register: (String name, area_index: Integer, row_index: Integer, detail_id: Integer) -> Route
+    def find: (String | Symbol name) -> Route?
+    def all: () -> Array[Route]
+    def names: () -> Array[String]
+
+    private
+    def register_default_routes: () -> void
+  end
+
+  def self.route_registry: () -> RouteRegistry
+end

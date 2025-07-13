@@ -1,0 +1,16 @@
+module KansaiTrainInfo
+  class StatusFormatter
+    STATUS_INDICATORS: Hash[Symbol, String]
+    STATUS_MESSAGES: Hash[String, ^(String) -> String]
+
+    @route_name: String
+    @raw_status: String?
+
+    def initialize: (String route_name, String? raw_status) -> void
+    def format: (?include_url: bool, ?detail_url: String?, ?description: String?) -> String?
+
+    private
+    def clean_status: (String raw_status) -> String
+    def build_message: (String status, String? description) -> String
+  end
+end

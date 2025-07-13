@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 require 'net/http'
-require 'nokogiri'
 require 'timeout'
+require 'nokogiri'
 require 'kansai_train_info/errors'
+require 'kansai_train_info/configuration'
+require 'kansai_train_info/http_client'
+require 'kansai_train_info/parser'
+require 'kansai_train_info/route'
+require 'kansai_train_info/status_formatter'
 
+# rubocop:disable Metrics/ModuleLength
 module KansaiTrainInfo
+  # rubocop:disable Metrics/ClassLength
   class << self
-    # 路線情報の定義
-    # フォーマット: 路線名 => [エリアインデックス, 行インデックス, 詳細ID]
+    # Legacy constants for backward compatibility
     LINES = {
       大阪環状線: [4, 2, 263],
       近鉄京都線: [6, 5, 288],
@@ -17,6 +23,9 @@ module KansaiTrainInfo
       烏丸線: [34, 2, 318],
       東西線: [34, 3, 319]
     }.freeze
+
+    DEFAULT_TIMEOUT = 10
+    MAX_RETRIES = 3
 
     # 指定された路線の運行情報を取得する
     #
@@ -31,52 +40,95 @@ module KansaiTrainInfo
     # @example 複数路線でURLを含める
     #   KansaiTrainInfo.get(['大阪環状線', '御堂筋線'], url: true)
     #
-    # rubocop:disable Layout/LineLength
+    # rubocop:disable Metrics/PerceivedComplexity
     def get(route_array, url: false)
+      if route_array.empty?
+        puts '利用可能な路線を入力してください'
+        return nil
+      end
+
       messages = []
 
-      route_array.each do |route|
-        line = LINES[route.to_sym]
-        raise InvalidRouteError, "Invalid route: #{route}" unless line
+      route_array.each do |route_name|
+        route = route_registry.find(route_name)
+        raise InvalidRouteError, "Invalid route: #{route_name}" unless route
 
-        status_xpath = "//*[@id='mdAreaMajorLine']/div[#{LINES[route.to_sym][0]}]/table/tr[#{LINES[route.to_sym][1]}]/td[2]"
-        detail_url = "https://transit.yahoo.co.jp/traininfo/detail/#{LINES[route.to_sym][2]}/0/"
         begin
-          state = kansai_doc.xpath(status_xpath).first&.text
-          messages << message(route, state, url, detail_url)
+          status = fetch_route_status(route)
+          description = status && status != '平常運転' ? fetch_description(route.detail_url) : nil
+
+          formatter = StatusFormatter.new(route_name, status)
+          formatted_message = formatter.format(
+            include_url: url,
+            detail_url: route.detail_url,
+            description: description
+          )
+
+          messages << formatted_message if formatted_message
         rescue NetworkError => e
-          messages << "#{route}: ネットワークエラー - #{e.message}"
+          messages << "#{route_name}: ネットワークエラー - #{e.message}"
         rescue ParseError => e
-          messages << "#{route}: データ解析エラー - #{e.message}"
+          messages << "#{route_name}: データ解析エラー - #{e.message}"
         end
       end
-      if messages.empty?
-        puts '利用可能な路線を入力してください'
-      else
-        messages.join(', ')
-      end
-    end
-    # rubocop:enable Layout/LineLength
 
-    def kansai_doc
-      url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
-      html = fetch_url(url)
-      Nokogiri::HTML.parse(html, nil, 'utf-8')
-    rescue StandardError => e
-      raise ParseError, "HTMLの解析に失敗しました: #{e.message}"
+      return nil if messages.empty?
+
+      messages.compact.join(', ')
+    end
+    # rubocop:enable Metrics/PerceivedComplexity
+
+    # 利用可能な路線を表示する
+    #
+    # @return [void]
+    #
+    # @example
+    #   KansaiTrainInfo.help
+    #   # => 利用可能な路線：
+    #   # => 大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線
+    def help
+      help_message = "利用可能な路線：\n#{route_registry.names.join('、')}"
+      puts help_message
     end
 
-    def description(detail_url)
-      detail_html = fetch_url(detail_url)
-      detail_doc = Nokogiri::HTML.parse(detail_html, nil, 'utf-8')
-      element = detail_doc.xpath('//*[@id="mdServiceStatus"]/dl/dd/p').first
-      element&.text || '詳細情報を取得できませんでした'
+    private
+
+    def route_registry
+      @route_registry ||= RouteRegistry.new
+    end
+
+    def http_client
+      @http_client ||= HttpClient.new
+    end
+
+    def fetch_route_status(route)
+      url = "#{KansaiTrainInfo.configuration.base_url}/traininfo/area/6/"
+      html = http_client.get(url)
+      parser = Parser.new(html)
+      parser.extract_status(route.status_xpath)
+    end
+
+    def fetch_description(detail_url)
+      html = http_client.get(detail_url)
+      parser = Parser.new(html)
+      parser.extract_detail('//*[@id="mdServiceStatus"]/dl/dd/p')
     rescue NetworkError => e
       "詳細情報取得エラー: #{e.message}"
     rescue StandardError => e
       "詳細情報解析エラー: #{e.message}"
     end
 
+    # Legacy method for backward compatibility
+    def description(detail_url)
+      html = http_client.get(detail_url)
+      parser = Parser.new(html)
+      result = parser.extract_detail('//*[@id="mdServiceStatus"]/dl/dd/p')
+      result || '詳細情報を取得できませんでした'
+    rescue StandardError
+      '詳細情報を取得できませんでした'
+    end
+
+    # Legacy method for backward compatibility
     def message(route, state, url, detail_url)
       return "#{route}は運行情報がありません" if state.nil?
 
@@ -93,39 +145,24 @@ module KansaiTrainInfo
                 end
       return "#{route}は#{clean_state}です" if message.nil?
 
-      show_message = "#{message} #{description(detail_url)}"
+      desc = description(detail_url)
+      show_message = "#{message} #{desc}"
       url ? show_message + detail_url : show_message
     end
 
-    # 利用可能な路線を表示する
-    #
-    # @return [void]
-    #
-    # @example
-    #   KansaiTrainInfo.help
-    #   # => 利用可能な路線：
-    #   # => 大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線
-    def help
-      help_message = "利用可能な路線：\n大阪環状線、近鉄京都線、阪急京都線, 御堂筋線, 烏丸線, 東西線"
-      puts help_message
-    end
+    # Legacy method for backward compatibility
+    # rubocop:disable Metrics/AbcSize
+    def fetch_url(url, retries = 0)
+      uri = URI.parse(url)
 
-    DEFAULT_TIMEOUT = 10
-    MAX_RETRIES = 3
-
-    private
-
-    def fetch_url(url_string, retries: 0)
-      uri = URI.parse(url_string)
-      Timeout.timeout(DEFAULT_TIMEOUT) do
+      Timeout.timeout(KansaiTrainInfo.configuration.timeout) do
         Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           request = Net::HTTP::Get.new(uri)
-          request['User-Agent'] = "kansai_train_info/#{KansaiTrainInfo::VERSION}"
+          request['User-Agent'] = KansaiTrainInfo.configuration.user_agent
           response = http.request(request)
 
           case response
           when Net::HTTPSuccess
-            # Create a mutable copy before force_encoding
             response.body.dup.force_encoding('UTF-8')
           else
             raise NetworkError, "HTTP Error: #{response.code} #{response.message}"
@@ -133,14 +170,28 @@ module KansaiTrainInfo
         end
       end
     rescue Timeout::Error
-      raise TimeoutError, "Request timeout after #{DEFAULT_TIMEOUT} seconds"
+      raise TimeoutError, "Request timeout after #{KansaiTrainInfo.configuration.timeout} seconds"
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
-      raise NetworkError, "Connection failed after #{MAX_RETRIES} retries: #{e.message}" unless retries < MAX_RETRIES
+      unless retries < KansaiTrainInfo.configuration.max_retries
+        raise NetworkError, "Connection failed after #{KansaiTrainInfo.configuration.max_retries} retries: #{e.message}"
+      end
 
-      sleep(2**retries)
-      fetch_url(url_string, retries: retries + 1)
+      sleep(KansaiTrainInfo.configuration.retry_delays[retries])
+      fetch_url(url, retries + 1)
     rescue StandardError => e
       raise NetworkError, "Network error: #{e.message}"
     end
+    # rubocop:enable Metrics/AbcSize
+
+    # Legacy method for backward compatibility
+    def kansai_doc
+      url = "#{KansaiTrainInfo.configuration.base_url}/traininfo/area/6/"
+      html = fetch_url(url)
+      Nokogiri::HTML.parse(html, nil, 'utf-8')
+    rescue StandardError => e
+      raise ParseError, "HTMLの解析に失敗しました: #{e.message}"
+    end
   end
+  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ModuleLength

@@ -1,0 +1,16 @@
+module KansaiTrainInfo
+  class Configuration
+    attr_accessor user_agent: String
+    attr_accessor timeout: Integer
+    attr_accessor max_retries: Integer
+    attr_accessor retry_delay: Integer
+    attr_accessor base_url: String
+
+    def initialize: () -> void
+    def retry_delays: () -> Array[Integer]
+  end
+
+  def self.configuration: () -> Configuration
+  def self.configure: () { (Configuration) -> void } -> void
+  def self.reset_configuration!: () -> Configuration
+end
