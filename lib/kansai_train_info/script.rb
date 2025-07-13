@@ -7,7 +7,7 @@ require 'timeout'
 url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
 
 uri = URI.parse(url)
-raise "Invalid URL" unless uri.is_a?(URI::HTTP)
+raise 'Invalid URL' unless uri.is_a?(URI::HTTP)
 
 html = Timeout.timeout(10) do
   Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|

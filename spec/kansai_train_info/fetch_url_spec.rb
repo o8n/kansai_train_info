@@ -33,9 +33,9 @@ RSpec.describe 'KansaiTrainInfo#fetch_url' do
       it 'increases sleep time exponentially' do
         stub_request(:get, url).to_raise(Errno::EHOSTUNREACH)
 
-        expect(KansaiTrainInfo).to receive(:sleep).with(1).ordered
-        expect(KansaiTrainInfo).to receive(:sleep).with(2).ordered
-        expect(KansaiTrainInfo).to receive(:sleep).with(4).ordered
+        expect(Kernel).to receive(:sleep).with(1).ordered
+        expect(Kernel).to receive(:sleep).with(2).ordered
+        expect(Kernel).to receive(:sleep).with(4).ordered
 
         expect do
           KansaiTrainInfo.send(:fetch_url, url)
