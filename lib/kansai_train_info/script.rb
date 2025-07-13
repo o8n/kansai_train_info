@@ -7,9 +7,11 @@ require 'timeout'
 url = 'https://transit.yahoo.co.jp/traininfo/area/6/'
 
 uri = URI.parse(url)
+raise 'Invalid URL' unless uri.is_a?(URI::HTTP)
+
 html = Timeout.timeout(10) do
   Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-    request = Net::HTTP::Get.new(uri)
+    request = Net::HTTP::Get.new(uri.path.empty? ? '/' : uri.path)
     response = http.request(request)
 
     case response
@@ -26,4 +28,5 @@ doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
 
 status_xpath = "//*[@id='mdAreaMajorLine']/div[4]/table/tr[3]/td[1]"
 
-puts doc.xpath(status_xpath).first.text
+element = doc.xpath(status_xpath).first
+puts element.text if element
