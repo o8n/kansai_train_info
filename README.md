@@ -162,12 +162,6 @@ rescue KansaiTrainInfo::InvalidRouteError => e
 end
 ```
 
-## Contributing
-
-バグ報告や機能リクエストは[GitHub Issues](https://github.com/o8n/kansai_train_info/issues)でお願いします。
-
-プルリクエストも歓迎です！詳細は[Contributing Guide](CONTRIBUTING.md)を参照してください。
-
 ## License
 
 kansai_train_info is licensed under the GPLv3 license for all open source applications.
@@ -176,10 +170,3 @@ Please do not use this project for commercial use, it is not intended to be used
 
 See [LICENSE.txt](LICENSE.txt) for details.
 
-## Author
-
-- **o8n** - [GitHub](https://github.com/o8n)
-
-## Acknowledgments
-
-- Yahoo!路線情報 for providing the train operation data
