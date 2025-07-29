@@ -2,7 +2,7 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/o8n/kansai_train_info/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/o8n/kansai_train_info/tree/master)
 [![Gem Version](https://badge.fury.io/rb/kansai_train_info.svg)](https://badge.fury.io/rb/kansai_train_info)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 関西地方の鉄道運行情報を取得するRuby Gemです。
 
@@ -170,7 +170,11 @@ end
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+kansai_train_info is licensed under the GPLv3 license for all open source applications.
+
+Please do not use this project for commercial use, it is not intended to be used for commercial use.
+
+See [LICENSE.txt](LICENSE.txt) for details.
 
 ## Author
 

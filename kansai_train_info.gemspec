@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['m.okamotchan@gmail.com']
   spec.summary       = 'check train info in kansai area'
   spec.description   = 'you can check train info in kansai area'
-  spec.license       = 'MIT'
+  spec.license       = 'GPL-3.0'
   spec.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
 
   # Specify which files should be added to the gem when it is released.
