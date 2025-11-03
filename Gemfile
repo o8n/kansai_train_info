@@ -5,7 +5,7 @@ gemspec
 group :development do
   gem 'bundler', '~> 2.0'
   gem 'pry'
-  gem 'rake', '~> 13.0'
+  gem 'rake', '~> 13.3'
   gem 'rbs', '~> 3.0'
   gem 'rubocop', require: false
   gem 'steep', '~> 1.6'
